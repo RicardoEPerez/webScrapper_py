@@ -1,4 +1,5 @@
 import re
+from bs4 import BeautifulSoup
 from colorama import Fore
 import requests
 
@@ -6,16 +7,9 @@ website = 'http://futanarifreak.blogspot.com'
 
 resultado = requests.get(website)
 content = resultado.text
-#print(content)
 
-listaB = []
+soup = BeautifulSoup(content,'lxml')
+box = soup.find_all('div', class_='post-body entry-content')
 
-for x in range(1,22):
-    patron = r"<b>"+str(x)+". [\w-]*"
-    nombre = re.findall(patron, str(content))
-    listaB.append(nombre)
-    #print (nombre)
-
-noDuplicate = list(set(listaB))
-
-print(listaB)
+with open(f'{website}.txt', 'w') as file:
+    file.write(str(box))
